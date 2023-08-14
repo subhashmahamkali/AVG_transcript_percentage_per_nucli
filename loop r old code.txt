@@ -1,0 +1,193 @@
+# Set the directory where your folders are located
+main_directory <- "E:/molecular_cartography/A2/A2_data/"
+
+# List of folders you want to work with
+folders <- c("GLYMA_19G255500","GLYMA_10G070200")  # Add or modify folder names as needed
+
+# Set the width and height for the saved plot
+plot_width <- 970  # Width in pixels
+plot_height <- 700  # Height in pixels
+dpi <- 500
+
+# Iterate over each folder
+for (folder in folders) {
+# Set the current folder path
+folder_path <- file.path(main_directory, folder)
+  
+# Set the working directory to the current folder
+setwd(folder_path)
+  
+# List the files in the current folder
+files <- list.files(pattern = "*.csv")
+  
+# Find the CSV file with "localization results by cell" in its name
+target_file <- grep("localization results by cell", files, value = TRUE)
+  
+# Proceed if the target file is found
+if (length(target_file) > 0) {
+  # Read the data from the target CSV file
+    data <- read.csv(target_file)
+
+data_filtered <- data[data$Cell.ID != 0, ]
+
+
+# Filter out the rows with zero transcripts
+data_filtered <- data_filtered[data_filtered$Total.transcript.. != 0, ]
+
+# Count the number of cells for each amount of transcripts
+transcript_counts <- table(data_filtered$Total.transcript..)
+
+# Convert transcript_counts to a data frame
+transcript_df <- as.data.frame(transcript_counts)
+
+# Rename the columns in the data frame
+colnames(transcript_df) <- c("Transcripts", "Number_of_Cells")
+
+# Create a data frame from transcript_counts
+transcript_df <- data.frame(Transcripts = as.numeric(names(transcript_counts)),
+                            Number_of_Cells = as.numeric(transcript_counts))
+
+# Get the maximum number of transcripts
+max_transcripts <- max(transcript_df$Transcripts)
+
+# Create a sequence of numbers from 1 to max_transcripts
+all_transcripts <- 1:max_transcripts
+
+# Identify missing numbers
+missing_transcripts <- setdiff(all_transcripts, transcript_df$Transcripts)
+
+# Create a data frame with missing numbers and set number of cells to 0
+missing_df <- data.frame(Transcripts = missing_transcripts, Number_of_Cells = 0)
+
+# Combine the original data frame and the missing data frame
+combined_df <- rbind(transcript_df, missing_df)
+
+# Sort the combined data frame by the transcripts column
+combined_df <- combined_df[order(combined_df$Transcripts), ]
+
+# View the updated data frame
+combined_df
+
+# Extract the main title from the target file name
+main_title <- gsub("GLYMA_", "", target_file)
+main_title <- gsub(" - localization results by cell.csv", "", main_title)
+
+# Save the resulting plot with a unique name based on the folder and file
+plot_filename <- paste0(folder, "_", target_file, "_plot.png")
+png(plot_filename, width = plot_width, height = plot_height, res = dpi)
+
+# Create the bar plot with dynamic main title
+barplot(combined_df$Number_of_Cells, 
+        names.arg = combined_df$Transcripts,
+        xlab = "Transcripts in each cell", 
+        ylab = "Number of Cells", 
+        main = main_title,  # Set the dynamic main title
+        ylim = c(0, 80), 
+        yaxp = c(0, 80, 40), 
+        ytics = seq(0, 80, 2),
+        las = 2,  # Rotate x-axis labels vertically
+        cex.names = 0.7,  # Adjust the font size of x-axis labels as needed
+        axis.lty = 1,  # Add tick marks for x-axis
+        axis.tck = 0.02,  # Set the length of tick marks
+        mgp = c(3, 0.5, 0))  # Adjust label margins
+
+dev.off()
+}}
+
+
+
+
+# Set the directory where your folders are located
+main_directory <- "E:/molecular_cartography/A2/A2_data/"
+
+# List of folders you want to work with
+folders <- c("G4DT","GLYMA_09G099900", "GLYMA_07G130800",  "GLYMA_04G010600","GLYMA_20G061300","GLYMA_06G235500","GLYMA_15G169100", "GLYMA_04G227200", "GLYMA_14G218700", "GLYMA_16G106800","GLYMA_17G180400", "GLYMA_06G256000","GLYMA_13G091600","GLYMA_06G002000", "GLYMA_15G008500","GLYMA_10G125000","GLYMA_05G023700","GLYMA_02G003700","GLYMA_11G078300","GLYMA_06G065000","GLYMA_13G334500","GLYMA_15G040000","GLYMA_18G043200","GLYMA_04G063800","GLYMA_18G197400","GLYMA_01G164600","GLYMA_06G294200","GLYMA_08G314900","GLYMA_14G204500","GLYMA_05G216000","GLYMA_11G243100","GLYMA_12G154300","GLYMA_15G274200")  # Add or modify folder names as needed
+
+# Set the width and height for the saved plot
+plot_width <- 970  # Width in pixels
+plot_height <- 600  # Height in pixel
+
+# Iterate over each folder
+for (folder in folders) {
+# Set the current folder path
+folder_path <- file.path(main_directory, folder)
+  
+# Set the working directory to the current folder
+setwd(folder_path)
+  
+# List the files in the current folder
+files <- list.files(pattern = "*.csv")
+  
+# Find the CSV file with "localization results by cell" in its name
+target_file <- grep("localization results by cell", files, value = TRUE)
+  
+# Proceed if the target file is found
+if (length(target_file) > 0) {
+  # Read the data from the target CSV file
+    data <- read.csv(target_file)
+
+data_filtered <- data[data$Cell.ID != 0, ]
+
+
+# Filter out the rows with zero transcripts
+data_filtered <- data_filtered[data_filtered$Total.transcript.. != 0, ]
+
+# Count the number of cells for each amount of transcripts
+transcript_counts <- table(data_filtered$Total.transcript..)
+
+# Convert transcript_counts to a data frame
+transcript_df <- as.data.frame(transcript_counts)
+
+# Rename the columns in the data frame
+colnames(transcript_df) <- c("Transcripts", "Number_of_Cells")
+
+# Create a data frame from transcript_counts
+transcript_df <- data.frame(Transcripts = as.numeric(names(transcript_counts)),
+                            Number_of_Cells = as.numeric(transcript_counts))
+
+# Get the maximum number of transcripts
+max_transcripts <- max(transcript_df$Transcripts)
+
+# Create a sequence of numbers from 1 to max_transcripts
+all_transcripts <- 1:max_transcripts
+
+# Identify missing numbers
+missing_transcripts <- setdiff(all_transcripts, transcript_df$Transcripts)
+
+# Create a data frame with missing numbers and set number of cells to 0
+missing_df <- data.frame(Transcripts = missing_transcripts, Number_of_Cells = 0)
+
+# Combine the original data frame and the missing data frame
+combined_df <- rbind(transcript_df, missing_df)
+
+# Sort the combined data frame by the transcripts column
+combined_df <- combined_df[order(combined_df$Transcripts), ]
+
+# View the updated data frame
+combined_df
+
+# Extract the main title from the target file name
+main_title <- gsub("GLYMA_", "", target_file)
+main_title <- gsub(" - localization results by cell.csv", "", main_title)
+
+# Save the resulting plot with a unique name based on the folder and file
+plot_filename <- paste0(folder, "_", target_file, "_plot.png")
+png(plot_filename, width = plot_width, height = plot_height)
+
+# Create the bar plot with dynamic main title
+barplot(combined_df$Number_of_Cells, 
+        names.arg = combined_df$Transcripts,
+        xlab = "Transcripts in each cell", 
+        ylab = "Number of Cells", 
+        main = main_title,  # Set the dynamic main title
+        ylim = c(0, 80), 
+        yaxp = c(0, 80, 40), 
+        ytics = seq(0, 80, 2),
+        las = 2,  # Rotate x-axis labels vertically
+        cex.names = 0.7,  # Adjust the font size of x-axis labels as needed
+        axis.lty = 1,  # Add tick marks for x-axis
+        axis.tck = 0.02,  # Set the length of tick marks
+        mgp = c(3, 0.5, 0))  # Adjust label margins
+
+dev.off()
+}}
